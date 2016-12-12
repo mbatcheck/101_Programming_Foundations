@@ -1,7 +1,5 @@
 VALID_CHOICES = { 'r' => 'rock', 'p' => 'paper', 's' => 'scissors',
                   'l' => 'lizard', 'S' => 'Spock' }
-@player_score = 0
-@computer_score = 0
 
 def prompt(message)
   Kernel.puts("=> #{message}")
@@ -22,29 +20,20 @@ end
 def display_results(player, computer)
   if win?(player, computer)
     prompt("You won!")
-    display_score("player")
+    "player"
   elsif win?(computer, player)
     prompt("You lost!")
-    display_score("computer")
+    "computer"
   else
     prompt("A tie!")
-    display_score("")
   end
 end
 
-def display_score(winner)
-  if winner == "player"
-    @player_score += 1
-  elsif winner == "computer"
-    @computer_score += 1
-  end
-    prompt("The score: You: #{@player_score} <> Computer: #{@computer_score}")
-end
-
+score = [0, 0]
 loop do
   player_choice = ''
   loop do
-    prompt("Choose one:")
+    prompt("Choose one (case-sensitive):")
     VALID_CHOICES.each { |key, value| prompt("Enter #{key} for #{value}") }
 
     player_choice = Kernel.gets().chomp()
@@ -61,7 +50,14 @@ loop do
   prompt("You chose: #{VALID_CHOICES[player_choice]}; Computer chose: "\
          "#{computer_choice[1]}")
 
-  display_results(player_choice, computer_choice[0])
+  winner = display_results(player_choice, computer_choice[0])
+
+  if winner == "player"
+    score[0] += 1
+  elsif winner == "computer"
+    score[1] += 1
+  end
+  prompt("Score = You: #{score[0]} <> Computer: #{score[1]}")
 
   prompt("Play again? Hit Y")
   answer = Kernel.gets().chomp()
