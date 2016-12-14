@@ -39,11 +39,10 @@ def display_score(round_winner, scoreboard)
   prompt("Score = You: #{scoreboard[0]} <> Computer: #{scoreboard[1]}")
 end
 
+scoreboard = [0, 0]
+do_break = ''
+player_choice = ''
 loop do
-  scoreboard = [0, 0]
-  do_break = ''
-  player_choice = ''
-
   prompt("Welcome to Rock Paper Scissors Lizard Spock!")
   prompt("First player to 5 wins")
   prompt("Enter Y to start")
