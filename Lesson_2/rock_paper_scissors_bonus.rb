@@ -19,49 +19,79 @@ end
 
 def display_results(player, computer)
   if win?(player, computer)
-    prompt("You won!")
+    prompt("Props! You won that round.")
     "player"
   elsif win?(computer, player)
-    prompt("You lost!")
+    prompt("Bummer! You lost that round.")
     "computer"
   else
     prompt("A tie!")
   end
 end
 
-score = [0, 0]
+def display_score(round_winner, scoreboard)
+  case round_winner
+  when "player"
+    scoreboard[0] += 1
+  when "computer"
+    scoreboard[1] += 1
+  end
+  prompt("Score = You: #{scoreboard[0]} <> Computer: #{scoreboard[1]}")
+end
+
 loop do
+  scoreboard = [0, 0]
+  do_break = ''
   player_choice = ''
+
+  prompt("Welcome to Rock Paper Scissors Lizard Spock!")
+  prompt("First player to 5 wins")
+  prompt("Enter Y to start")
+  answer = Kernel.gets().chomp()
+  break unless answer.casecmp('y').zero?
+
   loop do
-    prompt("Choose one (case-sensitive):")
-    VALID_CHOICES.each { |key, value| prompt("Enter #{key} for #{value}") }
+    loop do
+      prompt("Choose one (case-sensitive):")
+      VALID_CHOICES.each { |key, value| prompt("Enter #{key} for #{value}") }
+      player_choice = Kernel.gets().chomp()
 
-    player_choice = Kernel.gets().chomp()
+      if validate_player_choice(player_choice)
+        break
+      else
+        prompt("That's not a valid choice")
+      end
+    end
 
-    if validate_player_choice(player_choice)
-      break
+    computer_choice = VALID_CHOICES.to_a.sample
+    prompt("You chose: #{VALID_CHOICES[player_choice]}; Computer chose: "\
+           "#{computer_choice[1]}")
+
+    round_winner = display_results(player_choice, computer_choice[0])
+    prompt("\n")
+    display_score(round_winner, scoreboard)
+
+    if scoreboard.include?(5)
+      prompt("Game is over!")
+      prompt("Want to play again? (Enter Y)")
+      answer = Kernel.gets().chomp()
+      if answer.casecmp('y').zero?
+        scoreboard = [0, 0]
+      else
+        do_break = true
+        break
+      end
     else
-      prompt("That's not a valid choice")
+      prompt("Keep going? (Enter Y)")
+      answer = Kernel.gets().chomp()
+      if answer.casecmp('y') != 0
+        do_break = true
+        break
+      end
     end
   end
 
-  computer_choice = VALID_CHOICES.to_a.sample
-
-  prompt("You chose: #{VALID_CHOICES[player_choice]}; Computer chose: "\
-         "#{computer_choice[1]}")
-
-  winner = display_results(player_choice, computer_choice[0])
-
-  if winner == "player"
-    score[0] += 1
-  elsif winner == "computer"
-    score[1] += 1
-  end
-  prompt("Score = You: #{score[0]} <> Computer: #{score[1]}")
-
-  prompt("Play again? Hit Y")
-  answer = Kernel.gets().chomp()
-  break unless answer.casecmp('y').zero?
+  break if do_break == true
 end
 
-prompt("Sorry to see you go!")
+prompt("Bye-bye! Sorry to see you go...")
