@@ -1,7 +1,7 @@
 VALID_CHOICES = { 'r' => 'rock', 'p' => 'paper', 's' => 'scissors',
                   'l' => 'lizard', 'S' => 'Spock' }
-STRENGTH_CHART = { 'r' => %w(s l), 'p' => %w(S r), 's' => %w(p l),
-                   'S' => %w(s r), 'l' => %w(p S) }
+WINNING_COMBINATIONS = { 'r' => %w(s l), 'p' => %w(S r), 's' => %w(p l),
+                         'S' => %w(s r), 'l' => %w(p S) }
 
 def prompt(message)
   Kernel.puts("=> #{message}")
@@ -12,7 +12,7 @@ def validate_player_choice(player_choice)
 end
 
 def win?(first, second)
-  STRENGTH_CHART[first].include?(second)
+  WINNING_COMBINATIONS[first].include?(second)
 end
 
 def display_results(player, computer)
@@ -37,7 +37,7 @@ def calculate_score(round_winner, scoreboard)
 end
 
 scoreboard = [0, 0]
-do_break = ''
+do_break = false
 player_choice = ''
 loop do
   prompt("Welcome to Rock Paper Scissors Lizard Spock!")
@@ -75,14 +75,14 @@ loop do
       if answer.casecmp('y').zero?
         scoreboard = [0, 0]
       else
-        do_break
+        do_break = true
         break
       end
     else
       prompt("Keep going? (Enter Y)")
       answer = Kernel.gets().chomp()
       if answer.casecmp('y') != 0
-        do_break
+        do_break = true
         break
       end
     end
